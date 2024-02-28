@@ -3,6 +3,14 @@
 
 using namespace std;
 
+// Forward declaration
+class TemperatureSensor;
+
+class SmartHomeSystem {
+public:
+    void activateGeyser();
+};
+
 class HomeOwner {
 private:
     string name;
@@ -11,49 +19,45 @@ public:
     string getName() { return name; }
 };
 
-class SmartGeyser {
-private:
-    bool isActive;
-public:
-    SmartGeyser() : isActive(false) {}
-    void activateGeyser() { isActive = true; }
-    bool isGeyserActive() { return isActive; }
-};
-
-class EnvironmentSensor {
-private:
-    int currentTemperature;
-public:
-    EnvironmentSensor(int temp) : currentTemperature(temp) {}
-    int getCurrentTemperature() { return currentTemperature; }
-};
-
-class WaterHeater {
+class BathroomGeyser {
 private:
     int heatingTemperature;
 public:
-    WaterHeater() : heatingTemperature(0) {}
+    void calculateHeatingTemperature(TemperatureSensor& sensor);
     void setHeatingTemperature(int temp) { heatingTemperature = temp; }
     int getHeatingTemperature() { return heatingTemperature; }
 };
 
-int main() {
-    // Creating objects
-    HomeOwner owner("John");
-    SmartGeyser geyser;
-    EnvironmentSensor sensor(25);
-    WaterHeater heater;
+class TemperatureSensor {
+public:
+    int getCurrentTemperature() { return 25; } // Example current temperature
+};
 
-    // Activating geyser
-    geyser.activateGeyser();
+class HeatingSystem {
+public:
+    int calculateRequiredTemperature(int currentTemp) {
+        // Modify the calculation as per your requirements
+        return currentTemp + 10; // Example modification
+    }
+};
 
-    // Getting current temperature and setting heating temperature
+void SmartHomeSystem::activateGeyser() {
+    BathroomGeyser geyser;
+    TemperatureSensor sensor;
+    geyser.calculateHeatingTemperature(sensor);
+    cout << "Heating temperature set to: " << geyser.getHeatingTemperature() << " degrees" << endl;
+}
+
+void BathroomGeyser::calculateHeatingTemperature(TemperatureSensor& sensor) {
     int currentTemp = sensor.getCurrentTemperature();
-    heater.setHeatingTemperature(currentTemp + 10);
+    HeatingSystem heatingSystem;
+    int requiredTemp = heatingSystem.calculateRequiredTemperature(currentTemp);
+    setHeatingTemperature(requiredTemp);
+}
 
-    // Displaying information
-    cout << "Geyser active: " << geyser.isGeyserActive() << endl;
-    cout << "Heating temperature set to: " << heater.getHeatingTemperature() << " degrees" << endl;
+int main() {
+    SmartHomeSystem system;
+    system.activateGeyser();
 
-    return 0;
+    return 0;
 }
